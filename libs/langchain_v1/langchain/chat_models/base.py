@@ -463,10 +463,13 @@ def _init_chat_model_helper(
         from langchain_openai import ChatOpenAI
 
         # Support AIBADGR_API_KEY and AIBADGR_BASE_URL environment variables
-        api_key = kwargs.pop("api_key", None) or os.getenv("AIBADGR_API_KEY")
-        base_url = kwargs.pop("base_url", None) or os.getenv(
-            "AIBADGR_BASE_URL", "https://aibadgr.com/api/v1"
-        )
+        api_key = kwargs.pop("api_key", None)
+        if api_key is None:
+            api_key = os.getenv("AIBADGR_API_KEY")
+
+        base_url = kwargs.pop("base_url", None)
+        if base_url is None:
+            base_url = os.getenv("AIBADGR_BASE_URL", "https://aibadgr.com/api/v1")
 
         return ChatOpenAI(
             model=model,
