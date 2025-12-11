@@ -51,6 +51,40 @@ def test_init_chat_model(model_name: str, model_provider: str | None) -> None:
     assert llm1.dict() == llm2.dict()
 
 
+@pytest.mark.requires("langchain_openai")
+def test_init_aibadgr() -> None:
+    """Test AI Badgr provider initialization."""
+    # Test with explicit api_key and base_url
+    llm1: BaseChatModel = init_chat_model(
+        "test-model",
+        model_provider="aibadgr",
+        api_key="test-key",
+        base_url="https://custom.aibadgr.com/api/v1",
+    )
+    assert llm1.openai_api_base == "https://custom.aibadgr.com/api/v1"  # type: ignore[attr-defined]
+    assert llm1.openai_api_key.get_secret_value() == "test-key"  # type: ignore[attr-defined]
+
+    # Test with default base_url
+    llm2: BaseChatModel = init_chat_model(
+        "aibadgr:test-model",
+        api_key="test-key",
+    )
+    assert llm2.openai_api_base == "https://aibadgr.com/api/v1"  # type: ignore[attr-defined]
+
+    # Test with environment variable
+    with mock.patch.dict(
+        os.environ,
+        {"AIBADGR_API_KEY": "env-key", "AIBADGR_BASE_URL": "https://env.aibadgr.com/api/v1"},
+        clear=False,
+    ):
+        llm3: BaseChatModel = init_chat_model(
+            "test-model",
+            model_provider="aibadgr",
+        )
+        assert llm3.openai_api_base == "https://env.aibadgr.com/api/v1"  # type: ignore[attr-defined]
+        assert llm3.openai_api_key.get_secret_value() == "env-key"  # type: ignore[attr-defined]
+
+
 def test_init_missing_dep() -> None:
     with pytest.raises(ImportError):
         init_chat_model("mixtral-8x7b-32768", model_provider="groq")

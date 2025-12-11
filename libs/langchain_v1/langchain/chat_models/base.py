@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import warnings
 from importlib import util
 from typing import TYPE_CHECKING, Any, Literal, TypeAlias, cast, overload
@@ -131,6 +132,7 @@ def init_chat_model(
             - `xai`                     -> [`langchain-xai`](https://docs.langchain.com/oss/python/integrations/providers/xai)
             - `perplexity`              -> [`langchain-perplexity`](https://docs.langchain.com/oss/python/integrations/providers/perplexity)
             - `upstage`                 -> [`langchain-upstage`](https://docs.langchain.com/oss/python/integrations/providers/upstage)
+            - `aibadgr`                 -> [`langchain-openai`](https://docs.langchain.com/oss/python/integrations/providers/openai) (OpenAI-compatible)
 
         configurable_fields: Which model parameters are configurable at runtime:
 
@@ -456,6 +458,22 @@ def _init_chat_model_helper(
         from langchain_upstage import ChatUpstage
 
         return ChatUpstage(model=model, **kwargs)
+    if model_provider == "aibadgr":
+        _check_pkg("langchain_openai")
+        from langchain_openai import ChatOpenAI
+
+        # Support AIBADGR_API_KEY and AIBADGR_BASE_URL environment variables
+        api_key = kwargs.pop("api_key", None) or os.getenv("AIBADGR_API_KEY")
+        base_url = kwargs.pop("base_url", None) or os.getenv(
+            "AIBADGR_BASE_URL", "https://aibadgr.com/api/v1"
+        )
+
+        return ChatOpenAI(
+            model=model,
+            base_url=base_url,
+            api_key=api_key,
+            **kwargs,
+        )
     supported = ", ".join(_SUPPORTED_PROVIDERS)
     msg = f"Unsupported {model_provider=}.\n\nSupported model providers are: {supported}"
     raise ValueError(msg)
@@ -483,6 +501,7 @@ _SUPPORTED_PROVIDERS = {
     "xai",
     "perplexity",
     "upstage",
+    "aibadgr",
 }
 
 
