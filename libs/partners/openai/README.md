@@ -21,6 +21,10 @@ This package contains the LangChain integrations for OpenAI through their `opena
 
 For full documentation, see the [API reference](https://reference.langchain.com/python/integrations/langchain_openai/). For conceptual guides, tutorials, and examples on using these classes, see the [LangChain Docs](https://docs.langchain.com/oss/python/integrations/providers/openai).
 
+### Using OpenAI-Compatible Providers
+
+The `ChatOpenAI` class supports OpenAI-compatible API providers through the `base_url` parameter. See [docs/ai_badgr.md](docs/ai_badgr.md) for an example of using AI Badgr (Budget/Utility) as an OpenAI-compatible provider.
+
 ## 📕 Releases & Versioning
 
 See our [Releases](https://docs.langchain.com/oss/python/release-policy) and [Versioning](https://docs.langchain.com/oss/python/versioning) policies.
