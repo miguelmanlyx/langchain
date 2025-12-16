@@ -13,7 +13,7 @@ pip install langchain-openai
 Set your AI Badgr API key as an environment variable:
 
 ```bash
-export OPENAI_API_KEY="your-aibadgr-api-key"
+export OPENAI_API_KEY="sk-aibadgr-your-actual-api-key-here"
 # Optional: override the default base URL
 export OPENAI_API_BASE="https://aibadgr.com/api/v1"
 ```
@@ -28,8 +28,7 @@ from langchain_openai import ChatOpenAI
 # Using tier names (recommended)
 llm = ChatOpenAI(
     model="premium",
-    base_url="https://aibadgr.com/api/v1",
-    api_key="your-aibadgr-api-key"
+    base_url="https://aibadgr.com/api/v1"
 )
 
 response = llm.invoke("Hello, how are you?")
@@ -49,12 +48,12 @@ Specific model names are also supported:
 - `mistral-7b` (normal tier)
 - `llama3-8b-instruct` (premium tier)
 
-OpenAI-style model names are accepted and mapped automatically by the AI Badgr API.
+OpenAI model names like `gpt-4` or `gpt-3.5-turbo` are also accepted by the AI Badgr API.
 
 ## Environment Variables
 
-- `OPENAI_API_KEY` or `AIBADGR_API_KEY` - Your AI Badgr API key (required)
-- `OPENAI_API_BASE` or `AIBADGR_BASE_URL` - Custom base URL (optional, defaults to `https://aibadgr.com/api/v1`)
+- `OPENAI_API_KEY` - Your AI Badgr API key (required)
+- `OPENAI_API_BASE` - AI Badgr base URL (optional override)
 
 ## Example with Streaming
 
